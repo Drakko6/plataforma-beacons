@@ -1,0 +1,69 @@
+import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
+import { FirebaseContext } from "../../firebase";
+
+import Beacon from "../ui/Beacon";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+
+const Desktop = () => {
+  const [platillos, setPLatillos] = useState([]);
+
+  const { firebase, usuario } = useContext(FirebaseContext);
+
+  //CONSULTAR BD al cargar
+  useEffect(() => {
+    const obtenerPlatillos = () => {
+      firebase.db.collection("productos").onSnapshot(handleSnapshot);
+    };
+    if (usuario) {
+      obtenerPlatillos();
+    }
+  }, []);
+
+  //Snapshot nos permite utilizar la BD en tiempo real
+  function handleSnapshot(snapshot) {
+    const platillos = snapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+      };
+    });
+    //ALMACENA RESULTADOS EN EL STATE
+    setPLatillos(platillos);
+  }
+
+  return (
+    <>
+      {usuario ? (
+        <div>
+          <h1 className="text-2xl font-bold mb-4 text-center mt-4">Desktop </h1>
+
+          <table className="table w-full">
+            <thead>
+              <tr className="bg-blue-200 ">
+                <th className="p-3">Nombre de Campaña</th>
+                <th>Fecha de inicio</th>
+                <th>Status</th>
+                <th>Alertas</th>
+                {/* <th>Abiertos</th> */}
+                <th>Clicks</th>
+              </tr>
+            </thead>
+            <tbody>
+              {platillos.map((platillo) => (
+                <Beacon key={platillo.id} platillo={platillo} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <h1 className="text-center flex">
+          No cuentas con los permisos para ver esta página{" "}
+        </h1>
+      )}
+    </>
+  );
+};
+
+export default Desktop;
