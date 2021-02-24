@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FirebaseContext } from "../../firebase";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo-dc.jpg";
+import Logo from "../../assets/logo-dc.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClipboardList,
@@ -37,14 +37,16 @@ const Sidebar = () => {
       <div className="hidden md:block md:w-2/5 xl:w-1/5 bg-indigo-700 ">
         <div className="p-6">
           <div className="flex items-center justify-center">
-            <img className="h-24" src={Logo} />
+            <img className="h-24" src={Logo} alt="Logo Donde Comer" />
           </div>
 
           <p className="uppercase text-white text-2xl tracking-wide text-center font-bold">
             Donde Comer
           </p>
 
-          <p className="mt-3 text-gray-300  text-center">Bienvenido, Jaime</p>
+          <p className="mt-3 text-gray-300  text-center">
+            Bienvenido, {usuario.nombre}
+          </p>
 
           <p className="mt-3 text-gray-300  text-center">
             Administra tus Beacons
@@ -65,17 +67,16 @@ const Sidebar = () => {
             </NavLink>
 
             {/* YA TENEMOS POSIBILIDAD DE CAMBIAR SEGÚN EL TIPO DE USUARIO */}
-            {usuario.rol === "admin" ? (
-              <NavLink
-                className="p-1 text-gray-400 block hover:bg-orange-600 hover:text-gray-200"
-                activeClassName="text-yellow-500"
-                end
-                to="/beacons"
-              >
-                <FontAwesomeIcon icon={faSignal} className="mr-3" />
-                Beacons
-              </NavLink>
-            ) : null}
+
+            <NavLink
+              className="p-1 text-gray-400 block hover:bg-orange-600 hover:text-gray-200"
+              activeClassName="text-yellow-500"
+              end
+              to="/beacons"
+            >
+              <FontAwesomeIcon icon={faSignal} className="mr-3" />
+              Beacons
+            </NavLink>
 
             <NavLink
               className="p-1 text-gray-400 block hover:bg-orange-600 hover:text-gray-200"

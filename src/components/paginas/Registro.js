@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 const Registro = () => {
   //Context con las operaciones de firebase
-  const { firebase, usuario } = useContext(FirebaseContext);
+  const { firebase } = useContext(FirebaseContext);
 
   //Hook para redireccionar
   const navigate = useNavigate();
@@ -27,11 +27,16 @@ const Registro = () => {
   //validacion y leer formulario
   const formik = useFormik({
     initialValues: {
+      nombre: "",
       email: "",
       password: "",
       tipo: "",
+      restaurante: "",
     },
     validationSchema: Yup.object({
+      nombre: Yup.string()
+        .min(3, "El nombre debe tener al menos 3 caracteres")
+        .required("El nombre es obligatorio"),
       email: Yup.string()
         .email("El correo no es válido")
         .required("El correo es obligatorio"),
@@ -40,6 +45,9 @@ const Registro = () => {
         .required("La contraseña es obligatoria"),
 
       tipo: Yup.string().required("El tipo de usuario es obligatorio"),
+
+      restaurante: Yup.string(),
+      // .required("El restaurante es obligatorio para los clientes"),
     }),
     onSubmit: (usuario) => {
       try {
@@ -50,14 +58,19 @@ const Registro = () => {
             //Si no, agregar el usuario a collection
             const nuevoUsuario = {
               email: user.user.email,
+              nombre: usuario.nombre,
               rol: usuario.tipo,
             };
+
+            if (usuario.restaurante && usuario.rol === "client") {
+              nuevoUsuario.restaurante = usuario.restaurante;
+            }
 
             firebase.db
               .collection("usuarios")
               .doc(user.user.uid)
               .set(nuevoUsuario);
-            // firebase.db.collection("usuario").add();
+
             //redireccionar
             navigate("/");
           })
@@ -91,9 +104,37 @@ const Registro = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="nombre"
                 >
+                  Nombre
+                </label>
+                <input
+                  autoComplete="off"
+                  id="nombre"
+                  placeholder="Nombre de usuario"
+                  type="text"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                  value={formik.values.nombre}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              {formik.touched.email && formik.errors.email ? (
+                <div
+                  role="alert"
+                  className="mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
+                >
+                  <p className="font-bold">Hubo un error</p>
+                  <p>{formik.errors.email}</p>
+                </div>
+              ) : null}
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="email"
+                >
                   Correo
                 </label>
                 <input
+                  autoComplete="off"
                   id="email"
                   placeholder="Correo de usuario"
                   type="text"
@@ -121,6 +162,7 @@ const Registro = () => {
                   Contraseña
                 </label>
                 <input
+                  autoComplete="off"
                   id="password"
                   placeholder="Contraseña"
                   type="password"
@@ -171,6 +213,44 @@ const Registro = () => {
                   <p>{formik.errors.tipo}</p>
                 </div>
               ) : null}
+
+              {formik.values.tipo === "client" && (
+                <>
+                  <div className="mb-4">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="restaurante"
+                    >
+                      Propietario de Restaurante
+                    </label>
+                    <select
+                      id="restaurante"
+                      name="restaurante"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                      value={formik.values.restaurante}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    >
+                      {/* AQUI SE PINTARAN LOS RESTAURANTES HACIENDO PETICION A API */}
+                      <option value="">-- Seleccione --</option>
+                      <option value="mision 19">Mision 19</option>
+                      <option value="la diferencia">La Diferencia</option>
+                      <option value="villa marina">Villa Marina</option>
+                      <option value="los compas">Los Compas</option>
+                    </select>
+                  </div>
+
+                  {formik.touched.restaurante && formik.errors.restaurante ? (
+                    <div
+                      role="alert"
+                      className="mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
+                    >
+                      <p className="font-bold">Hubo un error</p>
+                      <p>{formik.errors.restaurante}</p>
+                    </div>
+                  ) : null}
+                </>
+              )}
 
               <input
                 value="Agregar Usuario"

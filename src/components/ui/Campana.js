@@ -1,13 +1,12 @@
 import React from "react";
 // import { FirebaseContext } from "../../firebase";
 
-const Beacon = ({ beacon }) => {
+const Campana = ({ campana }) => {
   //Existencia ref acceder a un valor del DOM directamente
   // const existenciaRef = useRef(platillo.existencia);
 
   //Context de firebase
   // const { firebase } = useContext(FirebaseContext);
-
   const {
     nombre,
     // bid,
@@ -17,7 +16,7 @@ const Beacon = ({ beacon }) => {
     distancia,
     status,
     // id,
-  } = beacon;
+  } = campana;
 
   return (
     <tr className="text-center">
@@ -30,4 +29,4 @@ const Beacon = ({ beacon }) => {
   );
 };
 
-export default Beacon;
+export default Campana;

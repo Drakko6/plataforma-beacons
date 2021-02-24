@@ -1,12 +1,11 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyCX-jsEjfK6a_beNgbBKm0IioTUnJg8_Mc",
-  authDomain: "restaurante-cliente.firebaseapp.com",
-  databaseURL: "https://restaurante-cliente.firebaseio.com",
-  projectId: "restaurante-cliente",
-  storageBucket: "restaurante-cliente.appspot.com",
-  messagingSenderId: "709109455228",
-  appId: "1:709109455228:web:2a8d3ef8d1c10282306cf9",
-  measurementId: "G-EJKLDZ0B7Y",
+  apiKey: "AIzaSyBCMFi2nYeMrlYcOyRfiOJoPOsvEJqKU8c",
+  authDomain: "donde-comer-fd6f1.firebaseapp.com",
+  projectId: "donde-comer-fd6f1",
+  storageBucket: "donde-comer-fd6f1.appspot.com",
+  messagingSenderId: "898712656927",
+  appId: "1:898712656927:web:5d8cc87ad8ca1d937cc92a",
+  measurementId: "G-TR5KHZKLJW",
 };
 
 export default firebaseConfig;

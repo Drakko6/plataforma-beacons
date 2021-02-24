@@ -4,7 +4,8 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { FirebaseContext } from "../../firebase";
 import { ToastContainer, toast } from "react-toastify";
-import Logo from "../../assets/logo-dc.jpg";
+import LogoCompleto from "../../assets/logo-completo.svg";
+import Logo from "../../assets/logo-dc.svg";
 import App from "../../assets/app.png";
 import Play from "../../assets/play.png";
 
@@ -66,8 +67,14 @@ const Login = () => {
 
   return (
     <div className="p-2  justify-center bg-white w-full h-screen">
-      <div className="flex bg-blue-700">
-        <img src={Logo} className="h-24 ml-32" />
+      <div className="flex bg-blue-700 ">
+        <div className="bg-white ml-32">
+          <img
+            src={LogoCompleto}
+            className="h-32 mt-5"
+            alt="Logo Donde Comer"
+          />
+        </div>
         {/* <h1 className="bg-white text-3xl font-bold mb-4 text-center text-orange-700 mt-5">
           Dónde Comer?
         </h1> */}
@@ -89,6 +96,7 @@ const Login = () => {
                   Correo
                 </label>
                 <input
+                  autoComplete="off"
                   id="correo"
                   placeholder="Correo"
                   type="text"
@@ -116,6 +124,7 @@ const Login = () => {
                   Contraseña
                 </label>
                 <input
+                  autoComplete="off"
                   id="password"
                   placeholder="Contraseña"
                   type="password"
@@ -165,17 +174,17 @@ const Login = () => {
           </div>
         </div>
 
-        <div className="flex justify-center mt-24 ml-4 md:block md:w-3/5 xl:w-1/2 ml-16">
+        <div className="flex justify-center mt-24 md:block md:w-3/5 xl:w-1/2 ml-16">
           <div className="block">
             <div className="flex items-center justify-center">
-              <img src={Logo} className="h-40" />
+              <img src={Logo} className="h-40" alt="Logo Donde Comer" />
             </div>
             <h1 className="text-3xl font-bold mb-4 text-center text-orange-700 mt-5">
               Descarga la app
             </h1>
             <div className="flex items-center justify-center">
-              <img src={Play} className="h-16" />
-              <img src={App} className="h-16" />
+              <img src={Play} className="h-16" alt="PlayStore" />
+              <img src={App} className="h-16" alt="AppStore" />
             </div>
           </div>
         </div>

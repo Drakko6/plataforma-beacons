@@ -7,37 +7,37 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const Beacons = () => {
-  const [platillos, setPLatillos] = useState([]);
+  const [beacons, setBeacons] = useState([]);
 
   const { firebase, usuario } = useContext(FirebaseContext);
 
   //CONSULTAR BD al cargar
   useEffect(() => {
-    const obtenerPlatillos = () => {
-      firebase.db.collection("productos").onSnapshot(handleSnapshot);
+    const obtenerBeacons = () => {
+      firebase.db.collection("beacons").onSnapshot(handleSnapshot);
     };
     if (usuario) {
-      obtenerPlatillos();
+      obtenerBeacons();
     }
-  }, []);
+  }, [usuario, firebase.db]);
 
   //Snapshot nos permite utilizar la BD en tiempo real
   function handleSnapshot(snapshot) {
-    const platillos = snapshot.docs.map((doc) => {
+    const beacons = snapshot.docs.map((doc) => {
       return {
         id: doc.id,
         ...doc.data(),
       };
     });
     //ALMACENA RESULTADOS EN EL STATE
-    setPLatillos(platillos);
+    setBeacons(beacons);
   }
 
   return (
     <>
       {usuario ? (
         <div>
-          <h1 className="text-3xl font-bold mb-4 text-center mt-4">Beacons </h1>
+          <h1 className="text-2xl font-bold mb-4 text-center mt-4">Beacons </h1>
           <div className="text-center">
             <div className=" text-center inline-block mr-5">
               <Link
@@ -61,9 +61,9 @@ const Beacons = () => {
             </div>
           </div>
 
-          <table class="table w-full">
+          <table className="table w-full">
             <thead>
-              <tr class="bg-blue-200 ">
+              <tr className="bg-blue-200 ">
                 <th className="p-3">Nombre</th>
                 <th>Restaurante</th>
                 <th>Status</th>
@@ -72,8 +72,8 @@ const Beacons = () => {
               </tr>
             </thead>
             <tbody>
-              {platillos.map((platillo) => (
-                <Beacon key={platillo.id} platillo={platillo} />
+              {beacons.map((beacon) => (
+                <Beacon key={beacon.id} beacon={beacon} />
               ))}
             </tbody>
           </table>

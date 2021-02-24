@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { FirebaseContext } from "../../firebase";
-import _ from "lodash";
+// import _ from "lodash";
 import {
   BarChart,
   Bar,
@@ -15,46 +15,15 @@ const Analitica = () => {
   //context con las operaciones de firebase
   const { firebase, usuario } = useContext(FirebaseContext);
 
-  //state de platillos
-  const [platillos, setPLatillos] = useState([]);
-
-  useEffect(() => {
-    const obtenerPlatillos = () => {
-      firebase.db
-        .collection("productos")
-        .where("vendidos", ">=", 1)
-        .onSnapshot(handleSnapshot);
-    };
-    if (usuario) {
-      obtenerPlatillos();
-    }
-  }, []);
-
-  //Snapshot nos permite utilizar la BD en tiempo real
-  function handleSnapshot(snapshot) {
-    let platillos = snapshot.docs.map((doc) => {
-      return {
-        id: doc.id,
-        ...doc.data(),
-      };
-    });
-
-    //Ordenar por vendidos
-    platillos = _.orderBy(platillos, "vendidos", "desc");
-
-    //Sacar los primeros 5
-    platillos = _.slice(platillos, 0, 5);
-
-    //ALMACENA RESULTADOS EN EL STATE
-    setPLatillos(platillos);
-  }
+  //state de beacons
+  const [beacons, setBeacons] = useState([]);
 
   return (
     <>
       {usuario ? (
         <div className="content-center text-center">
           <h1 className=" flex  justify-center text-3xl font-light mb-4">
-            Productos más vendidos
+            Analítica
           </h1>
           {/*{platillos.map((platillo) => (
         <Vendido key={platillo.id} platillo={platillo} />
@@ -62,7 +31,7 @@ const Analitica = () => {
 
           <ResponsiveContainer width={700} height={500}>
             <BarChart
-              data={platillos}
+              data={beacons}
               margin={{
                 top: 5,
                 right: 10,

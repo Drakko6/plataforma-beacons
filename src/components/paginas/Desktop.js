@@ -1,36 +1,32 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
 import { FirebaseContext } from "../../firebase";
 
-import Beacon from "../ui/Beacon";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-
+import Campana from "../ui/Campana";
 const Desktop = () => {
-  const [platillos, setPLatillos] = useState([]);
+  const [campanas, setCampanas] = useState([]);
 
   const { firebase, usuario } = useContext(FirebaseContext);
 
   //CONSULTAR BD al cargar
   useEffect(() => {
-    const obtenerPlatillos = () => {
-      firebase.db.collection("productos").onSnapshot(handleSnapshot);
+    const obtenerCampanas = () => {
+      firebase.db.collection("campanas").onSnapshot(handleSnapshot);
     };
     if (usuario) {
-      obtenerPlatillos();
+      obtenerCampanas();
     }
-  }, []);
+  }, [usuario, firebase.db]);
 
   //Snapshot nos permite utilizar la BD en tiempo real
   function handleSnapshot(snapshot) {
-    const platillos = snapshot.docs.map((doc) => {
+    const campanas = snapshot.docs.map((doc) => {
       return {
         id: doc.id,
         ...doc.data(),
       };
     });
     //ALMACENA RESULTADOS EN EL STATE
-    setPLatillos(platillos);
+    setCampanas(campanas);
   }
 
   return (
@@ -51,8 +47,8 @@ const Desktop = () => {
               </tr>
             </thead>
             <tbody>
-              {platillos.map((platillo) => (
-                <Beacon key={platillo.id} platillo={platillo} />
+              {campanas.map((campana) => (
+                <Campana key={campana.id} campana={campana} />
               ))}
             </tbody>
           </table>

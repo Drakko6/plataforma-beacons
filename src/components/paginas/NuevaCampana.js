@@ -21,30 +21,34 @@ const NuevaCampana = () => {
   const formik = useFormik({
     initialValues: {
       nombre: "",
-      precio: "",
-      categoria: "",
-      imagen: "",
-      descripcion: "",
+      titulo: "",
+      mensaje: "",
+      url: "",
+      beacon: "",
     },
     validationSchema: Yup.object({
       nombre: Yup.string()
-        .min(3, "Los platillos deben tener al menos 3 caracteres")
+        .min(3, "Las campañas deben tener al menos 3 caracteres")
+        .required("El nombre de la campaña es obligatorio"),
+      titulo: Yup.string()
+        .min(6, "El titulo debe tener al menos 6 caracteres")
         .required("El nombre del platillo es obligatorio"),
-      precio: Yup.number()
-        .min(1, "Debes agregar un número")
-        .required("El precio es obligatorio"),
-
-      categoria: Yup.string().required("La categoría es obligatoria"),
-      descripcion: Yup.string()
-        .min(10, "La descripción debe ser más larga")
-        .required("La descripción del platillo es obligatoria"),
+      mensaje: Yup.string()
+        .min(10, "El mensaje debe ser más largo")
+        .required("El mensaje es obligatorio"),
+      url: Yup.string(),
+      beacon: Yup.string().required("El beacon es obligatorio"),
     }),
-    onSubmit: (platillo) => {
+    onSubmit: (campana) => {
       try {
-        platillo.existencia = true;
-        platillo.imagen = urlimagen;
-        platillo.vendidos = 0;
-        firebase.db.collection("productos").add(platillo);
+        campana.fecha = Date.now();
+        campana.status = true;
+        campana.alertas = 0;
+        campana.abiertos = 0;
+        campana.clicks = 0;
+        //asignar restaurante también
+
+        firebase.db.collection("campanas").add(campana);
 
         //redireccionar
         navigate("/menu");
@@ -70,11 +74,10 @@ const NuevaCampana = () => {
 
     //almacenar la url de destino
     const url = await firebase.storage
-      .ref("productos")
+      .ref("campanas")
       .child(nombre)
       .getDownloadURL();
 
-    console.log(url);
     setUrlimagen(url);
   };
   const handleProgress = (progreso) => {
@@ -85,8 +88,8 @@ const NuevaCampana = () => {
     <>
       {usuario ? (
         <div>
-          <h1 className="text-2xl font-light mb-4 mt-3 text-center">
-            Agregar Campaña
+          <h1 className="text-2xl font-bold mb-4 mt-3 text-center">
+            Crear Campaña
           </h1>
           <div className="flex justify-center mt-10">
             <div className="w-full max-w-3xl">
@@ -96,11 +99,11 @@ const NuevaCampana = () => {
                     className="block text-gray-700 text-sm font-bold mb-2"
                     htmlFor="nombre"
                   >
-                    Nombre
+                    Nombre de Campaña
                   </label>
                   <input
                     id="nombre"
-                    placeholder="Nombre de Platillo"
+                    placeholder="Nombre de campaña"
                     type="text"
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
                     value={formik.values.nombre}
@@ -121,59 +124,107 @@ const NuevaCampana = () => {
                 <div className="mb-4">
                   <label
                     className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor="precio"
+                    htmlFor="titulo"
                   >
-                    Precio
+                    Título de notificación
                   </label>
                   <input
-                    id="precio"
-                    placeholder="$20"
-                    min="0"
-                    type="number"
+                    id="titulo"
+                    placeholder="Título de notificación"
+                    type="text"
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
-                    value={formik.values.precio}
+                    value={formik.values.titulo}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
                 </div>
-
-                {formik.touched.precio && formik.errors.precio ? (
+                {formik.touched.titulo && formik.errors.titulo ? (
                   <div
                     role="alert"
                     className="mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
                   >
                     <p className="font-bold">Hubo un error</p>
-                    <p>{formik.errors.precio}</p>
+                    <p>{formik.errors.titulo}</p>
                   </div>
                 ) : null}
 
                 <div className="mb-4">
                   <label
                     className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor="categoria"
+                    htmlFor="mensaje"
                   >
-                    Categoría
+                    Mensaje de notificación
+                  </label>
+                  <textarea
+                    id="mensaje"
+                    placeholder="Mensaje de notificación"
+                    className="h-40 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                    value={formik.values.mensaje}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  ></textarea>
+                </div>
+
+                {formik.touched.mensaje && formik.errors.mensaje ? (
+                  <div
+                    role="alert"
+                    className="mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
+                  >
+                    <p className="font-bold">Hubo un error</p>
+                    <p>{formik.errors.mensaje}</p>
+                  </div>
+                ) : null}
+
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="url"
+                  >
+                    URL/Link a página web
+                  </label>
+                  <input
+                    id="url"
+                    placeholder="URL de página web"
+                    type="text"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                    value={formik.values.url}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                </div>
+                {formik.touched.url && formik.errors.url ? (
+                  <div
+                    role="alert"
+                    className="mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
+                  >
+                    <p className="font-bold">Hubo un error</p>
+                    <p>{formik.errors.url}</p>
+                  </div>
+                ) : null}
+
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="beacon"
+                  >
+                    Asignar a Beacon
                   </label>
                   <select
                     id=""
-                    name="categoria"
+                    name="beacon"
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
-                    value={formik.values.categoria}
+                    value={formik.values.beacon}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   >
                     <option value="">-- Seleccione --</option>
-                    <option value="entrada">Entrada</option>
-                    <option value="desayuno">Desayuno</option>
-                    <option value="comida">Comida</option>
-                    <option value="cena">Cena</option>
-                    <option value="bebida">Bebidas</option>
-                    <option value="postre">Postre</option>
-                    <option value="ensalada">Ensalada</option>
+                    <option value="bc001">BC001 -Misión 19</option>
+                    <option value="bc002">BC002 - La Diferencia</option>
+                    <option value="bc003">BC004 - Sabor a Mí</option>
                   </select>
                 </div>
 
-                {formik.touched.categoria && formik.errors.categoria ? (
+                {formik.touched.beacon && formik.errors.beacon ? (
                   <div
                     role="alert"
                     className="mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
@@ -188,7 +239,7 @@ const NuevaCampana = () => {
                     className="block text-gray-700 text-sm font-bold mb-2"
                     htmlFor="imagen"
                   >
-                    Imagen
+                    Imagen de Menú
                   </label>
                   <FileUploader
                     accept="image/*"
@@ -220,35 +271,15 @@ const NuevaCampana = () => {
                   </p>
                 )}
 
-                <div className="mb-4">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor="descripcion"
-                  >
-                    Descripción
-                  </label>
-                  <textarea
-                    id="descripcion"
-                    placeholder="Descripción del platillo"
-                    className="h-40 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
-                    value={formik.values.descripcion}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  ></textarea>
-                </div>
-
-                {formik.touched.descripcion && formik.errors.descripcion ? (
-                  <div
-                    role="alert"
-                    className="mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
-                  >
-                    <p className="font-bold">Hubo un error</p>
-                    <p>{formik.errors.descripcion}</p>
-                  </div>
-                ) : null}
+                <button
+                  type="button"
+                  className="bg-gray-800 hover:bg-gray-900 w-full mt-5 p-2 text-white font-bold"
+                >
+                  Vista Previa
+                </button>
 
                 <input
-                  value="Agregar Platillo"
+                  value="Guardar Campaña"
                   type="submit"
                   className="bg-gray-800 hover:bg-gray-900 w-full mt-5 p-2 text-white font-bold"
                 />
