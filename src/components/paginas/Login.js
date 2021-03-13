@@ -8,11 +8,18 @@ import LogoCompleto from "../../assets/logo-completo.svg";
 import Logo from "../../assets/logo-dc.svg";
 import App from "../../assets/app.png";
 import Play from "../../assets/play.png";
+import { useMediaQuery } from "react-responsive";
+import { Link } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(min-device-width: 1224px)",
+  });
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
   const lanzarError = () =>
     toast.error("Usuario o contraseña incorrectos", {
@@ -66,130 +73,255 @@ const Login = () => {
   });
 
   return (
-    <div className="p-2  justify-center bg-white w-full h-screen">
-      <div className="flex bg-blue-700 ">
-        <div className="bg-white ml-32">
-          <img
-            src={LogoCompleto}
-            className="h-32 mt-5"
-            alt="Logo Donde Comer"
-          />
-        </div>
-        {/* <h1 className="bg-white text-3xl font-bold mb-4 text-center text-orange-700 mt-5">
-          Dónde Comer?
-        </h1> */}
-      </div>
-
-      <div className="flex w-full">
-        <div className="flex justify-center mt-16 ml-16 md:block md:w-3/5 xl:w-1/2">
-          <h2 className="block text-xl font-bold mb-6 text-center text-gray-700">
-            Acceso al Panel de Clientes
-          </h2>
-
-          <div className="block  max-w-3xl text-center">
-            <form onSubmit={formik.handleSubmit}>
-              <div className="mb-4 text-center">
-                <label
-                  className="block text-gray-800 text-sm font-bold mb-2"
-                  htmlFor="correo"
-                >
-                  Correo
-                </label>
-                <input
-                  autoComplete="off"
-                  id="correo"
-                  placeholder="Correo"
-                  type="text"
-                  className="text-center shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
-                  value={formik.values.correo}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-              </div>
-              {formik.touched.correo && formik.errors.correo ? (
-                <div
-                  role="alert"
-                  className=" text-center mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
-                >
-                  <p className="font-bold">Hubo un error</p>
-                  <p>{formik.errors.correo}</p>
-                </div>
-              ) : null}
-
-              <div className="mb-4">
-                <label
-                  className=" text-center  block text-gray-800 text-sm font-bold mb-2"
-                  htmlFor="password"
-                >
-                  Contraseña
-                </label>
-                <input
-                  autoComplete="off"
-                  id="password"
-                  placeholder="Contraseña"
-                  type="password"
-                  className=" text-center  shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
-                  value={formik.values.password}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-              </div>
-
-              {formik.touched.password && formik.errors.password ? (
-                <div
-                  role="alert"
-                  className=" text-center mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
-                >
-                  <p className="font-bold">Hubo un error</p>
-                  <p>{formik.errors.password}</p>
-                </div>
-              ) : null}
-
-              <input
-                value="Ingresar"
-                type="submit"
-                className="uppercase bg-gray-800 hover:bg-gray-900 w-full mt-5 p-2 text-white font-bold"
+    <>
+      {isDesktopOrLaptop && (
+        <div className="p-2  justify-center bg-white w-full h-screen">
+          <div className="flex bg-blue-700 ">
+            <div className="bg-white ml-32">
+              <img
+                src={LogoCompleto}
+                className="h-32 mt-5"
+                alt="Logo Donde Comer"
               />
-            </form>
-
-            <input
-              value="Ingresar con Facebook"
-              type="submit"
-              className="uppercase bg-blue-800 hover:bg-gray-900 w-full mt-5 p-2 text-white font-bold"
-            />
-
-            <h6 className="mt-3 hover:text-blue-600">
-              ¿Has olvidado tu contraseña?
-            </h6>
-
-            <ToastContainer />
-
-            <h2
-              onClick={() => navigate("/registro")}
-              className="text-center text-xl mt-2 mb-4  text-gray-700  "
-            >
-              Si no tienes una cuenta,{" "}
-              <span className="hover:text-blue-600">Regístrate aquí</span>
-            </h2>
-          </div>
-        </div>
-
-        <div className="flex justify-center mt-24 md:block md:w-3/5 xl:w-1/2 ml-16">
-          <div className="block">
-            <div className="flex items-center justify-center">
-              <img src={Logo} className="h-40" alt="Logo Donde Comer" />
-            </div>
-            <h1 className="text-3xl font-bold mb-4 text-center text-orange-700 mt-5">
-              Descarga la app
-            </h1>
-            <div className="flex items-center justify-center">
-              <img src={Play} className="h-16" alt="PlayStore" />
-              <img src={App} className="h-16" alt="AppStore" />
             </div>
           </div>
+
+          <div className="flex w-full">
+            <div className="flex justify-center mt-16 ml-16 md:block md:w-3/5 xl:w-1/2">
+              <h2 className="block text-xl font-bold mb-6 text-center text-gray-700">
+                Acceso al Panel de Clientes
+              </h2>
+
+              <div className="block  max-w-3xl text-center">
+                <form onSubmit={formik.handleSubmit}>
+                  <div className="mb-4 text-center">
+                    <label
+                      className="block text-gray-800 text-sm font-bold mb-2"
+                      htmlFor="correo"
+                    >
+                      Correo
+                    </label>
+                    <input
+                      autoComplete="off"
+                      id="correo"
+                      placeholder="Correo"
+                      type="text"
+                      className="text-center shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                      value={formik.values.correo}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+                  {formik.touched.correo && formik.errors.correo ? (
+                    <div
+                      role="alert"
+                      className=" text-center mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
+                    >
+                      <p className="font-bold">Hubo un error</p>
+                      <p>{formik.errors.correo}</p>
+                    </div>
+                  ) : null}
+
+                  <div className="mb-4">
+                    <label
+                      className=" text-center  block text-gray-800 text-sm font-bold mb-2"
+                      htmlFor="password"
+                    >
+                      Contraseña
+                    </label>
+                    <input
+                      autoComplete="off"
+                      id="password"
+                      placeholder="Contraseña"
+                      type="password"
+                      className=" text-center  shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+
+                  {formik.touched.password && formik.errors.password ? (
+                    <div
+                      role="alert"
+                      className=" text-center mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
+                    >
+                      <p className="font-bold">Hubo un error</p>
+                      <p>{formik.errors.password}</p>
+                    </div>
+                  ) : null}
+
+                  <input
+                    value="Ingresar"
+                    type="submit"
+                    className="uppercase bg-gray-800 hover:bg-gray-900 w-full mt-5 p-2 text-white font-bold"
+                  />
+                </form>
+
+                <Link to="/recuperar-password">
+                  <h6 className="mt-6 hover:text-blue-600">
+                    ¿Has olvidado tu contraseña?
+                  </h6>
+                </Link>
+
+                <ToastContainer />
+              </div>
+            </div>
+
+            <div className="flex justify-center mt-24 md:block md:w-3/5 xl:w-1/2 ml-16">
+              <div className="block">
+                <div className="flex items-center justify-center">
+                  <img src={Logo} className="h-40" alt="Logo Donde Comer" />
+                </div>
+                <h1 className="text-3xl font-bold mb-4 text-center text-orange-700 mt-5">
+                  Descarga la app
+                </h1>
+                <div className="flex items-center justify-center">
+                  <a
+                    href="https://google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src={Play} className="h-16" alt="PlayStore" />
+                  </a>
+                  <a
+                    href="https://google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src={App} className="h-16" alt="AppStore" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+
+      {isTabletOrMobile && (
+        <div className="p-2  justify-center bg-white w-full h-screen">
+          <div className="flex bg-blue-700 ">
+            <div className="bg-white ml-12">
+              <img
+                src={LogoCompleto}
+                className="h-20 mt-5"
+                alt="Logo Donde Comer"
+              />
+            </div>
+          </div>
+
+          <div className="block w-full">
+            <div className="block justify-center mt-5 ml-5 md:block md:w-3/5 xl:w-1/2">
+              <h2 className="block text-xl font-bold mb-6 text-center text-gray-700">
+                Acceso al Panel de Clientes
+              </h2>
+
+              <div className="block  max-w-3xl text-center">
+                <form onSubmit={formik.handleSubmit}>
+                  <div className="mb-4 text-center">
+                    <label
+                      className="block text-gray-800 text-sm font-bold mb-2"
+                      htmlFor="correo"
+                    >
+                      Correo
+                    </label>
+                    <input
+                      autoComplete="off"
+                      id="correo"
+                      placeholder="Correo"
+                      type="text"
+                      className="text-center shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                      value={formik.values.correo}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+                  {formik.touched.correo && formik.errors.correo ? (
+                    <div
+                      role="alert"
+                      className=" text-center mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
+                    >
+                      <p className="font-bold">Hubo un error</p>
+                      <p>{formik.errors.correo}</p>
+                    </div>
+                  ) : null}
+
+                  <div className="mb-4">
+                    <label
+                      className=" text-center  block text-gray-800 text-sm font-bold mb-2"
+                      htmlFor="password"
+                    >
+                      Contraseña
+                    </label>
+                    <input
+                      autoComplete="off"
+                      id="password"
+                      placeholder="Contraseña"
+                      type="password"
+                      className=" text-center  shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                  </div>
+
+                  {formik.touched.password && formik.errors.password ? (
+                    <div
+                      role="alert"
+                      className=" text-center mb-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
+                    >
+                      <p className="font-bold">Hubo un error</p>
+                      <p>{formik.errors.password}</p>
+                    </div>
+                  ) : null}
+
+                  <input
+                    value="Ingresar"
+                    type="submit"
+                    className="uppercase bg-gray-800 hover:bg-gray-900 w-full mt-5 p-2 text-white font-bold"
+                  />
+                </form>
+
+                <Link to="/recuperar-password">
+                  <h6 className="mt-6 hover:text-blue-600">
+                    ¿Has olvidado tu contraseña?
+                  </h6>
+                </Link>
+
+                <ToastContainer />
+              </div>
+            </div>
+
+            <div className="flex justify-center mt-16 md:block md:w-3/5 xl:w-1/2 ml-6">
+              <div className="block">
+                <div className="flex items-center justify-center">
+                  <img src={Logo} className="h-32" alt="Logo Donde Comer" />
+                </div>
+                <h1 className="text-3xl font-bold mb-4 text-center text-orange-700 mt-5">
+                  Descarga la app
+                </h1>
+                <div className="flex items-center justify-center">
+                  <a
+                    href="https://google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src={Play} className="h-16" alt="PlayStore" />
+                  </a>
+                  <a
+                    href="https://google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src={App} className="h-16" alt="AppStore" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

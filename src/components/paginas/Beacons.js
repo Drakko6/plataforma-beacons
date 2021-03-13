@@ -14,12 +14,27 @@ const Beacons = () => {
   //CONSULTAR BD al cargar
   useEffect(() => {
     const obtenerBeacons = () => {
-      firebase.db.collection("beacons").onSnapshot(handleSnapshot);
+      firebase.db
+        .collection("beacons")
+        .get()
+        .then((docs) => {
+          const beacons = docs.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          });
+          setBeacons(beacons);
+        });
     };
+
+    // const obtenerBeacons = () => {
+    //   firebase.db.collection("beacons").onSnapshot(handleSnapshot);
+    // };
     if (usuario) {
       obtenerBeacons();
     }
-  }, [usuario, firebase.db]);
+  }, []);
 
   //Snapshot nos permite utilizar la BD en tiempo real
   function handleSnapshot(snapshot) {
@@ -29,7 +44,6 @@ const Beacons = () => {
         ...doc.data(),
       };
     });
-    //ALMACENA RESULTADOS EN EL STATE
     setBeacons(beacons);
   }
 

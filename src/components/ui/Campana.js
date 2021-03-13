@@ -7,24 +7,17 @@ const Campana = ({ campana }) => {
 
   //Context de firebase
   // const { firebase } = useContext(FirebaseContext);
-  const {
-    nombre,
-    // bid,
-    restaurante,
-    // rangoMenor,
-    // rangoMayor,
-    distancia,
-    status,
-    // id,
-  } = campana;
 
+  const { nombre, fecha, clicks, alertas, status } = campana;
+
+  const fechaFormateada = new Date(fecha).toLocaleDateString();
   return (
     <tr className="text-center">
       <td className="p-3">{nombre}</td>
-      <td>{restaurante}</td>
+      <td>{fechaFormateada}</td>
       <td>{status ? "Activo" : "Inactivo"}</td>
-      <td>{distancia}</td>
-      <td>Acciones</td>
+      <td>{alertas}</td>
+      <td>{clicks}</td>
     </tr>
   );
 };

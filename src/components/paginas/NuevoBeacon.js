@@ -46,9 +46,11 @@ const NuevoBeacon = () => {
         beacon.fecha = Date.now();
         beacon.userEmail = usuario.email;
 
-        firebase.db.collection("beacons").add(beacon);
+        firebase.db.collection("beacons").doc(beacon.bid).set(beacon);
+
+        // firebase.db.collection("beacons").add(beacon);
         //redireccionar
-        navigate("/");
+        navigate("/beacons");
       } catch (error) {
         console.log(error);
       }

@@ -10,18 +10,20 @@ import {
   faChartBar,
   faUser,
   faWindowClose,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const [menu, setMenu] = useState(true);
 
-  const { firebase, usuario } = useContext(FirebaseContext);
+  const { firebase, usuario, setUsuario } = useContext(FirebaseContext);
 
   const cerrarSesion = () => {
     firebase.auth
       .signOut()
       .then(() => {
+        setUsuario(null);
         navigate("/");
       })
       .catch(function (error) {
@@ -87,6 +89,7 @@ const Sidebar = () => {
               <FontAwesomeIcon icon={faChartBar} className="mr-3" />
               Analítica
             </NavLink>
+
             <NavLink
               className="p-1 text-gray-400 block hover:bg-orange-600 hover:text-gray-200"
               activeClassName="text-yellow-500"
@@ -96,16 +99,18 @@ const Sidebar = () => {
               <FontAwesomeIcon icon={faUser} className="mr-3" />
               Mi cuenta
             </NavLink>
+            {usuario.rol === "admin" ? (
+              <NavLink
+                className="p-1 text-gray-400 block hover:bg-orange-600 hover:text-gray-200"
+                activeClassName="text-yellow-500"
+                end
+                to="/registro"
+              >
+                <FontAwesomeIcon icon={faUsers} className="mr-3" />
+                Registro de usuarios
+              </NavLink>
+            ) : null}
           </nav>
-          {/* <NavLink
-              className="p-1 text-gray-400 block hover:bg-yellow-500 hover:text-gray-900"
-              activeClassName="text-yellow-500"
-              end
-              to="/totales"
-            >
-              Totales
-            </NavLink> */}
-          {/* </nav> */}
 
           <div className="mt-8 p-1 text-gray-400 block hover:bg-red-700  hover:text-gray-200">
             <button onClick={() => cerrarSesion()} type="submit">
@@ -183,6 +188,18 @@ const Sidebar = () => {
                 <FontAwesomeIcon icon={faUser} className="mr-3" />
                 Mi Cuenta
               </NavLink>
+
+              {usuario.rol === "admin" ? (
+                <NavLink
+                  className="p-1 text-gray-400 block hover:bg-orange-600 hover:text-gray-200"
+                  activeClassName="text-yellow-500"
+                  end
+                  to="/registro"
+                >
+                  <FontAwesomeIcon icon={faUsers} className="mr-3" />
+                  Registro de usuarios
+                </NavLink>
+              ) : null}
             </nav>
 
             <div className="mt-3 p-1 text-gray-400 block hover:bg-red-700  hover:text-gray-200">

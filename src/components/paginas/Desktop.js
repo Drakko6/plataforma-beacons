@@ -10,24 +10,41 @@ const Desktop = () => {
   //CONSULTAR BD al cargar
   useEffect(() => {
     const obtenerCampanas = () => {
-      firebase.db.collection("campanas").onSnapshot(handleSnapshot);
+      firebase.db
+        .collection("campanas")
+        .get()
+        .then((docs) => {
+          const campanas = docs.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          });
+
+          setCampanas(campanas);
+        });
     };
+
+    // const obtenerCampanas = () => {
+    //   firebase.db.collection("campanas").onSnapshot(handleSnapshot);
+    // };
+
     if (usuario) {
       obtenerCampanas();
     }
-  }, [usuario, firebase.db]);
+  }, []);
 
   //Snapshot nos permite utilizar la BD en tiempo real
-  function handleSnapshot(snapshot) {
-    const campanas = snapshot.docs.map((doc) => {
-      return {
-        id: doc.id,
-        ...doc.data(),
-      };
-    });
-    //ALMACENA RESULTADOS EN EL STATE
-    setCampanas(campanas);
-  }
+  // function handleSnapshot(snapshot) {
+  //   const campanas = snapshot.docs.map((doc) => {
+  //     return {
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     };
+  //   });
+  //   //ALMACENA RESULTADOS EN EL STATE
+  //   setCampanas(campanas);
+  // }
 
   return (
     <>

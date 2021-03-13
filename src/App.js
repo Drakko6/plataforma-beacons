@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router";
 
 import firebase, { FirebaseContext } from "./firebase";
-import PedidoState from "./context/pedidos/pedidosState";
+// import PedidoState from "./context/pedidos/pedidosState";
 
 import Login from "./components/paginas/Login";
 
@@ -16,14 +16,14 @@ import VistaPrevia from "./components/paginas/VistaPrevia";
 
 import Sidebar from "./components/ui/Sidebar";
 import Registro from "./components/paginas/Registro";
+import EditarBeacon from "./components/paginas/EditarBeacon";
 
 function App() {
-  const [usuario, setUsuario] = useState({});
+  const [usuario, setUsuario] = useState(null);
 
-  firebase.auth.onAuthStateChanged((user) => {
-    if (user) {
-      if (!user.isAnonymous) {
-        //hay usuario NO Anonimo
+  useEffect(() => {
+    firebase.auth.onAuthStateChanged((user) => {
+      if (user) {
         //consultar BD con id del usuario
         firebase.db
           .collection("usuarios")
@@ -33,42 +33,46 @@ function App() {
             setUsuario(doc.data());
           });
       } else {
-        setUsuario(false);
+        setUsuario(null);
       }
-    } else {
-      setUsuario(false);
-    }
-  });
+    });
+  }, []);
 
   return (
     <FirebaseContext.Provider
       value={{
         firebase,
         usuario,
+        setUsuario,
       }}
     >
-      <PedidoState>
-        <div className="md:flex min-h-screen">
-          {usuario ? <Sidebar /> : null}
-          <div className="w-full p-1">
-            <Routes>
-              {usuario ? (
-                <Route exact path="/" element={<Desktop />} />
-              ) : (
-                <Route exact path="/" element={<Login />} />
-              )}
+      <div className="md:flex min-h-screen">
+        {usuario ? <Sidebar /> : null}
+        <div className="w-full p-1">
+          <Routes>
+            {usuario ? (
+              <Route exact path="/" element={<Desktop />} />
+            ) : (
+              <Route exact path="/" element={<Login />} />
+            )}
 
-              <Route path="/beacons" element={<Beacons />} />
-              <Route path="/nuevo-beacon" element={<NuevoBeacon />} />
-              <Route path="/nueva-campana" element={<NuevaCampana />} />
-              <Route path="/vista-previa" element={<VistaPrevia />} />
-              <Route path="/analitica" element={<Analitica />} />
-              <Route path="/mi-cuenta" element={<MiCuenta />} />
-              <Route path="/registro" element={<Registro />} />
-            </Routes>
-          </div>
+            <Route path="/beacons" element={<Beacons />} />
+            <Route path="/nuevo-beacon" element={<NuevoBeacon />} />
+            <Route path="/nueva-campana" element={<NuevaCampana />} />
+            <Route path="/vista-previa" element={<VistaPrevia />} />
+            <Route path="/analitica" element={<Analitica />} />
+            <Route path="/mi-cuenta" element={<MiCuenta />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/recuperar-password" element={<MiCuenta />} />
+
+            <Route
+              path="beacons/editar/:nombre/:bid/:rangoMayor/:rangoMenor/:distancia/:restaurante"
+              element={<EditarBeacon />}
+              end
+            />
+          </Routes>
         </div>
-      </PedidoState>
+      </div>
     </FirebaseContext.Provider>
   );
 }
